@@ -4,6 +4,7 @@ import cors from "cors";
 import { UserRoutes } from "./app/modules/user/user.route";
 import { carRoutes } from "./app/modules/car/car.route";
 import globalErrorHandler from "./app/modules/middleware/globalErrorHandler";
+import { bookingRoutes } from "./app/modules/booking/booking.route";
 const port = 3000;
 
 //parser
@@ -12,6 +13,7 @@ app.use(cors());
 
 app.use("/api", UserRoutes);
 app.use("/api", carRoutes);
+app.use("/api", bookingRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   var a = 10;

@@ -6,13 +6,15 @@ import catchAsync from "../utils/cacheAsync";
 import sendResponse from "../utils/sendResponse";
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
-  // const product = req.body;
-  // const result = await userServices.createUserIntoDB(product);
+  // const user = req.body;
+  // const result = await userServices.createUserIntoDB(user);
+  // const populateUser = await result.populate("user", "-password");
   const user = req.body;
   const zodParseDataUser = userValidationSchema.parse(user);
   const result = await userServices.createUserIntoDB(zodParseDataUser);
+
   sendResponse(res, {
-    statusCode: StatusCodes.OK,
+    statusCode: StatusCodes.CREATED,
     success: true,
     message: "User is created successfully",
     data: result,

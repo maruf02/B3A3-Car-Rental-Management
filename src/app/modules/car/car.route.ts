@@ -5,19 +5,21 @@ import {
   createCarValidationSchema,
   updateCarValidationSchema,
 } from "./car.validation";
+import { bookingController } from "../booking/booking.controller";
 
 const router = express.Router();
 
 router.post(
   "/cars",
-  validateRequest(createCarValidationSchema),
+  // validateRequest(createCarValidationSchema),
   carController.createCar
 );
 router.get("/cars", carController.getAllCars);
 router.get("/cars/:id", carController.getSingleCar);
+router.put("/cars/return", bookingController.returnBooking);
 router.put(
   "/cars/:id",
-  validateRequest(updateCarValidationSchema),
+  // validateRequest(updateCarValidationSchema),
   carController.updateCarById
 );
 

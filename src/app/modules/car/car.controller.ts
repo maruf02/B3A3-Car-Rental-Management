@@ -12,8 +12,8 @@ const createCar = catchAsync(async (req: Request, res: Response) => {
   // const result = await carService.createCarIntoDB(zodParseDataUser);
   sendResponse(res, {
     success: true,
-    statusCode: StatusCodes.OK,
-    message: "Car is created successfully",
+    statusCode: StatusCodes.CREATED,
+    message: "Car created successfully",
     data: result,
   });
 });

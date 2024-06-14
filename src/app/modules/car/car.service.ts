@@ -7,6 +7,7 @@ const createCarIntoDB = async (car: TCar) => {
 };
 const getAllCarsFromDB = async () => {
   const cars = await CarModel.find();
+  console.log("object");
   return cars;
 };
 
