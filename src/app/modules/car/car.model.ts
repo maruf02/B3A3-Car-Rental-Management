@@ -42,4 +42,9 @@ const carSchema = new Schema<TCar>(
   { timestamps: true }
 );
 
+carSchema.pre("find", function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
 export const CarModel = model<TCar>("Car", carSchema);

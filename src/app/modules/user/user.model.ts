@@ -39,7 +39,6 @@ const userSchema = new Schema<TUser>(
 );
 
 userSchema.pre("save", async function (next) {
-  // encrypt password
   const user = this;
   user.password = await bcrypt.hash(
     user.password,

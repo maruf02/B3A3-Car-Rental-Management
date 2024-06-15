@@ -6,13 +6,14 @@ import { bookingValidationSchema } from "./booking.validation";
 import catchAsync from "../utils/cacheAsync";
 import sendResponse from "../utils/sendResponse";
 import moment from "moment";
+import { decode } from "jsonwebtoken";
 
 const createBooking = catchAsync(async (req: Request, res: Response) => {
-  const { carId, user, date, startTime } = req.body;
-
+  const { carId, date, startTime } = req.body;
+  const { _id, email } = req.userAll;
   const bookingData = {
     car: carId,
-    user,
+    user: _id,
     date,
     startTime,
   };
@@ -52,7 +53,9 @@ const getAllBookingQuery = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getBookingByUserId = catchAsync(async (req: Request, res: Response) => {
-  const result = await bookingService.getBookingByUserIdFromDB();
+  console.log("objectJWT", req.userAll); //login id ace
+  const { _id, email } = req.userAll;
+  const result = await bookingService.getBookingByUserIdFromDB(_id);
   sendResponse(res, {
     success: true,
     statusCode: StatusCodes.OK,
@@ -61,36 +64,17 @@ const getBookingByUserId = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const timeToMinutesORHour = (time: string) => {
-  const duration = moment.duration(time);
-  const differenceInHours = (duration.asMinutes() / 60).toFixed(2);
-  return differenceInHours;
-  // return duration.asHours;
-};
-
 const returnBooking = catchAsync(async (req: Request, res: Response) => {
   const { bookingId, endTime } = req.body;
+  const result = await bookingService.returnBookingFromDB(bookingId, endTime);
 
-  // const result = await bookingService.returnBookingFromDB(bookingId);
-  // const splitTime = endTime.split(":");
-  // const intSplit = parseInt(splitTime[0]);
-  // console.log("result");
-  // console.log("Input Data:", req.body);
-  res.send("return booking");
-
-  const a = "13:00";
-  const b = "15:00";
-  const price = 500;
-  const aInHours: any = timeToMinutesORHour(a);
-  const bInHours: any = timeToMinutesORHour(b);
-  const differenceInHours: any = bInHours - aInHours;
-  const priceCal = Math.round(differenceInHours * price);
-  console.log(
-    `The difference in hours is: ${differenceInHours} and price :${priceCal}`
-  );
-  // res.send(differenceInHours);
-  // let endTimeInt = parseInt(endTime.sub);
-  // console.log(endTime + endTime);
+  console.log(result);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Booking returned successfully",
+    data: result,
+  });
 });
 
 export const bookingController = {

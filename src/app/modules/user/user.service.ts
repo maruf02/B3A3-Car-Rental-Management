@@ -9,7 +9,7 @@ const createUserIntoDB = async (user: TUser) => {
     "-password"
   );
   return userWithoutPassword;
-  return result;
+  // return result;
 };
 
 export const userServices = {

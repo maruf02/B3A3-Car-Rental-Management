@@ -19,6 +19,7 @@ const createCar = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllCars = catchAsync(async (req: Request, res: Response) => {
+  console.log(req.userAll);
   const result = await carService.getAllCarsFromDB();
   sendResponse(res, {
     success: true,
@@ -31,6 +32,25 @@ const getAllCars = catchAsync(async (req: Request, res: Response) => {
 const getSingleCar = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const result = await carService.getCarByIdFromDB(id);
+  if (!result) {
+    sendResponse(res, {
+      success: false,
+      statusCode: StatusCodes.NOT_FOUND,
+      message: "Car not found",
+      data: [],
+    });
+    return;
+  }
+
+  if (result.isDeleted) {
+    sendResponse(res, {
+      success: false,
+      statusCode: StatusCodes.GONE,
+      message: "This car has been deleted",
+      data: null,
+    });
+    return;
+  }
   sendResponse(res, {
     success: true,
     statusCode: StatusCodes.OK,
@@ -51,9 +71,21 @@ const updateCarById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const deleteCar = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await carService.deleteCarFromDB(id);
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: "Car deleted successfully",
+    data: result,
+  });
+});
+
 export const carController = {
   createCar,
   getAllCars,
   getSingleCar,
   updateCarById,
+  deleteCar,
 };

@@ -7,7 +7,7 @@ const createCarIntoDB = async (car: TCar) => {
 };
 const getAllCarsFromDB = async () => {
   const cars = await CarModel.find();
-  console.log("object");
+  // console.log("object");
   return cars;
 };
 
@@ -23,9 +23,19 @@ const updateCarByIdInDB = async (carId: string, carData: TCar) => {
   return cars;
 };
 
+const deleteCarFromDB = async (id: string) => {
+  const result = await CarModel.findByIdAndUpdate(
+    id,
+    { $set: { isDeleted: true } },
+    { new: true }
+  );
+  return result;
+};
+
 export const carService = {
   createCarIntoDB,
   getAllCarsFromDB,
   getCarByIdFromDB,
   updateCarByIdInDB,
+  deleteCarFromDB,
 };

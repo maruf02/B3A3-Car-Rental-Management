@@ -6,21 +6,20 @@ import {
   updateCarValidationSchema,
 } from "./car.validation";
 import { bookingController } from "../booking/booking.controller";
+import auth from "../middleware/auth";
+import { USER_ROLE } from "../user/user.constant";
 
 const router = express.Router();
 
-router.post(
-  "/cars",
-  // validateRequest(createCarValidationSchema),
-  carController.createCar
-);
+router.post("/cars", auth(USER_ROLE.admin), carController.createCar);
 router.get("/cars", carController.getAllCars);
 router.get("/cars/:id", carController.getSingleCar);
-router.put("/cars/return", bookingController.returnBooking);
 router.put(
-  "/cars/:id",
-  // validateRequest(updateCarValidationSchema),
-  carController.updateCarById
+  "/cars/return",
+  auth(USER_ROLE.admin),
+  bookingController.returnBooking
 );
+router.put("/cars/:id", auth(USER_ROLE.admin), carController.updateCarById);
+router.delete("/cars/:id", auth(USER_ROLE.admin), carController.deleteCar);
 
 export const carRoutes = router;

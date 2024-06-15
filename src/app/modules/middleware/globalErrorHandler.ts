@@ -1,20 +1,21 @@
-import { ErrorRequestHandler } from "express";
+import { NextFunction, Request, Response } from "express";
+import AppError from "../utils/AppError";
 
-export type TErrorSources = {
-  path: string | number;
-  message: string;
-}[];
+const globalErrorHandler = (
+  err: AppError,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  err.statusCode = err.statusCode || 500;
+  err.message = err.message || "Internal Server Error";
 
-const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
-  //setting default values
-  let statusCode = 500;
-  let message = "Something went wrong!";
-  let errorSources: TErrorSources = [
-    {
-      path: "",
-      message: "Something went wrong",
-    },
-  ];
+  res.status(err.statusCode).json({
+    success: false,
+    statusCode: err.statusCode,
+    message: err.message,
+    stack: process.env.NODE_ENV === "development" ? err.stack : undefined,
+  });
 };
 
 export default globalErrorHandler;
